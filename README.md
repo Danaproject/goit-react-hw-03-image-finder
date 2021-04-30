@@ -1,4 +1,4 @@
-# goit-react-hw-03-phoenbook
+# goit-react-hw-03-image-finder
 
 GoIT course React homework
 
