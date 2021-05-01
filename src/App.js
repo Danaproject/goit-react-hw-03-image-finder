@@ -1,11 +1,15 @@
 import { Component } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import imagesApi from './components/services/images-api';
 import Searchbar from './components/Searchbar';
 import ImageGallery from './components/ImageGallery';
+import Button from './components/Button/Button';
 import Modal from './components/Modal';
 import ModalImage from './components/ModalImage';
 import Container from './components/Container';
-import './styles.css';
+import Loader from './components/Loader';
+import 'react-toastify/dist/ReactToastify.css';
+import NoImages from './components/NoImages';
 
 class App extends Component {
   state = {
@@ -13,7 +17,6 @@ class App extends Component {
     searchQuery: '',
     page: 1,
     isLoading: false,
-    error: null,
     showModal: false,
     largeImageURL: '',
     tags: '',
@@ -30,7 +33,6 @@ class App extends Component {
       searchQuery: query,
       page: 1,
       images: [],
-      error: null,
     });
   };
 
@@ -47,13 +49,20 @@ class App extends Component {
           images: [...prevState.images, ...images],
           page: prevState.page + 1,
         }));
-        console.log(images);
+
         window.scrollTo({
           top: document.documentElement.scrollHeight,
           behavior: 'smooth',
         });
+
+        if (!images.length) {
+          toast('Sorry, nothing to show!');
+        }
       })
-      .catch(error => this.setState({ error }))
+      .catch(error => {
+        console.log(error);
+        toast.error('Oops, something went wrong!');
+      })
       .finally(() => this.setState({ isLoading: false }));
   };
 
@@ -79,37 +88,27 @@ class App extends Component {
   };
 
   render() {
-    const {
-      images,
-      isLoading,
-      error,
-      showModal,
-      largeImageURL,
-      tags,
-    } = this.state;
+    const { images, isLoading, showModal, largeImageURL, tags } = this.state;
     const shouldRenderLoadMoreButton = images.length > 0 && !isLoading;
     return (
-      <>
-        {error && <h1>Oops, something's wrong!</h1>}
+      <div className="App">
         <Searchbar onSubmit={this.onChangeQuery} />
 
         <Container>
           <ImageGallery images={images} onImageClick={this.onImageClick} />
 
-          {isLoading && <h1>Loading...</h1>}
-          {shouldRenderLoadMoreButton && (
-            <button type="button" onClick={this.fetchImages} className="Button">
-              Load more
-            </button>
-          )}
+          {isLoading && <Loader />}
+          {!images.length && NoImages()}
+          {shouldRenderLoadMoreButton && <Button onClick={this.fetchImages} />}
 
           {showModal && (
             <Modal onClose={this.onModalImageClose}>
               <ModalImage largeImageURL={largeImageURL} tags={tags} />
             </Modal>
           )}
+          <ToastContainer autoClose={3000} />
         </Container>
-      </>
+      </div>
     );
   }
 }

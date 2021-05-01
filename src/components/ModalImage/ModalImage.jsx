@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
+import './ModalImage.scss';
 
 const ModalImage = ({ largeImageURL, tags }) => (
-  <img src={largeImageURL} alt={tags} />
+  <img src={largeImageURL} alt={tags} className="ModalImage" />
 );
 
 ModalImage.propTypes = {

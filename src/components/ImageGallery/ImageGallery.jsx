@@ -1,4 +1,5 @@
 import ImageGalleryItem from './ImageGalleryItem';
+import './ImageGallery.scss';
 
 const ImageGallery = ({ images, onImageClick }) => (
   <ul className="ImageGallery">
