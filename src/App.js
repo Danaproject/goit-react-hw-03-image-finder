@@ -50,11 +50,6 @@ class App extends Component {
           page: prevState.page + 1,
         }));
 
-        window.scrollTo({
-          top: document.documentElement.scrollHeight,
-          behavior: 'smooth',
-        });
-
         if (!images.length) {
           toast('Sorry, nothing to show!');
         }
@@ -63,7 +58,14 @@ class App extends Component {
         console.log(error);
         toast.error('Oops, something went wrong!');
       })
-      .finally(() => this.setState({ isLoading: false }));
+      .finally(() => {
+        this.setState({ isLoading: false });
+        page > 1 &&
+          window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: 'smooth',
+          });
+      });
   };
 
   onImageClick = e => {
