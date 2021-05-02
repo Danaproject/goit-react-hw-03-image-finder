@@ -1,4 +1,4 @@
-import Album from './Album.jpg';
+import Album from './Album.png';
 import './NoImages.scss';
 
 export default function NoImages() {
